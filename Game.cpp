@@ -59,7 +59,7 @@ bool Game::Update()
 	return true;
 }
 
-//  All rendering should be done between the locks in this function
+//  All rendering, including text, should occur in the Render function
 void Game::Render() const
 {
 	Console::Lock(true);
@@ -86,7 +86,7 @@ void Game::CheckCollision()
 
 	}
 
-	// TODO #6 - If no bricks remain, pause ball and display victory text with R to reset
+	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
@@ -94,5 +94,5 @@ void Game::CheckCollision()
 		ball.y_velocity *= -1;
 	}
 
-	// TODO #7 - If ball touches bottom of window, pause ball and display defeat text with R to reset
+	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
 }
