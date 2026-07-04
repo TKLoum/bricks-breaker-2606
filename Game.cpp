@@ -21,6 +21,8 @@ void Game::Reset()
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
 	bricks.clear();
+
+
 	for (int brickIndex = 0; brickIndex < 5; brickIndex++)
 	{
 		Box brick;
@@ -31,6 +33,7 @@ void Game::Reset()
 		brick.doubleThick = true;
 		brick.color = ConsoleColor::DarkGreen;
 		bricks.push_back(brick);
+		
 	}
 }
 
@@ -78,41 +81,41 @@ void Game::Render() const
 	for (const Box& brick : bricks)
 	brick.Draw();
 
+	if (gameOver && playerWon)
+	{
+		Console::WordWrap(22, 15, 40, "You win! Press R to play again.");
+	}
+
 	Console::Lock(false);
 }
 
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	for (Box& brick : bricks)
-
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+	for (std::vector<Box>::iterator brickIterator = bricks.begin(); brickIterator != bricks.end(); )
 	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+		Box& brick = *brickIterator;
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-		for (std::vector<Box>::iterator brickIterator = bricks.begin(); brickIterator != bricks.end(); )
+		if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
-			if (brickIterator->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
-			{
-				brickIterator->color = ConsoleColor(brickIterator->color - 1);
-				ball.y_velocity *= -1;
+			brick.color = ConsoleColor(brick.color - 1);
+			ball.y_velocity *= -1;
 
-				if (brickIterator->color == ConsoleColor::Black)
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+
+				if (brick.color == ConsoleColor::Black)
 				{
 					brickIterator = bricks.erase(brickIterator);
 					continue;
 				}
-			}
-
-			brickIterator++;
 		}
 
+			brickIterator++;
+
+		
 	}
-
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty()) { ball.moving = false; gameOver = true; playerWon = true; }
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
