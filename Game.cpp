@@ -10,6 +10,10 @@ void Game::Reset()
 {
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
+
+	gameOver = false;
+	playerWon = false;
+
 	paddle.width = 12;
 	paddle.height = 2;
 	paddle.x_position = 32;
